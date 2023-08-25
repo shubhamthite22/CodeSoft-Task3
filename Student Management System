@@ -1,0 +1,212 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Objects;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
+public class Student extends JFrame implements ActionListener {
+    String name;
+    String roll_no;
+    String c;
+    String Percentage;
+    JLabel l1;
+    JLabel l2;
+    JLabel l3;
+    JLabel l4;
+    JTextField t1;
+    JTextField t2;
+    JTextField t3;
+    JTextField t4;
+    JTextArea a;
+    ArrayList<Student> student = new ArrayList();
+
+    public Student(String name, String roll_no, String c, String percentage) {
+        this.Percentage = percentage;
+        this.roll_no = roll_no;
+        this.c = c.toUpperCase();
+        this.name = name.toUpperCase();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getC() {
+        return this.c;
+    }
+
+    public String getRoll_no() {
+        return this.roll_no;
+    }
+
+    public String getPercentage() {
+        return this.Percentage;
+    }
+
+    public Student() {
+        this.setTitle("STUDENT MANAGEMENT SYSTEM");
+        this.setSize(500, 500);
+        this.setLayout(new BorderLayout());
+        JPanel p = new JPanel(new GridLayout(6, 3, 5, 5));
+        p.setBorder(new EmptyBorder(10, 20, 15, 15));
+        p.setBackground(Color.LIGHT_GRAY);
+        this.l1 = new JLabel("Name :");
+        this.l2 = new JLabel("Roll No :");
+        this.l3 = new JLabel("Class :");
+        this.l4 = new JLabel("Percentage :");
+        this.t1 = new JTextField();
+        this.t2 = new JTextField();
+        this.t3 = new JTextField();
+        this.t4 = new JTextField();
+        p.add(this.l1);
+        p.add(this.t1);
+        p.add(this.l2);
+        p.add(this.t2);
+        p.add(this.l3);
+        p.add(this.t3);
+        p.add(this.l4);
+        p.add(this.t4);
+        JButton button1 = new JButton("Add");
+        JButton button2 = new JButton("Remove");
+        JButton button3 = new JButton("Search");
+        JButton button4 = new JButton("Display");
+        button1.addActionListener(this);
+        button2.addActionListener(this);
+        button3.addActionListener(this);
+        button4.addActionListener(this);
+        p.add(button1);
+        p.add(button2);
+        p.add(button3);
+        p.add(button4);
+        this.add(p, "North");
+        this.a = new JTextArea();
+        this.a.setEditable(false);
+        p.add(this.a);
+        JScrollPane sc = new JScrollPane(this.a);
+        this.add(sc, "Center");
+        this.setDefaultCloseOperation(3);
+        this.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String roll;
+        if (e.getActionCommand().equals("Add")) {
+            roll = this.t1.getText().trim();
+            String roll = this.t2.getText().trim();
+            String c = this.t3.getText().trim();
+            String per = this.t4.getText().trim();
+            if (!roll.isEmpty() && !roll.isEmpty() && !c.isEmpty() && !per.isEmpty()) {
+                Student st = new Student(roll, roll, c, per);
+                this.student.add(st);
+                JOptionPane.showMessageDialog(this, "Inserted Successfully");
+                this.clearField();
+                this.clearArea();
+            } else {
+                JOptionPane.showMessageDialog(this, "Please fill all the details");
+            }
+        }
+
+        Iterator var8;
+        Student s;
+        if (e.getActionCommand().equals("Remove")) {
+            this.clearArea();
+            roll = this.t2.getText().toUpperCase().trim();
+            var8 = this.student.iterator();
+
+            while(var8.hasNext()) {
+                s = (Student)var8.next();
+                if (Objects.equals(s.getRoll_no(), roll)) {
+                    this.student.remove(s);
+                    JOptionPane.showMessageDialog(this, "Details removed");
+                    this.clearField();
+                    return;
+                }
+            }
+
+            if (roll.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter roll no to remove the details");
+                this.clearField();
+            }
+
+            if (!roll.isEmpty() && !Objects.equals(this.getRoll_no(), roll)) {
+                JOptionPane.showMessageDialog(this, "No record found");
+                this.clearField();
+            }
+        }
+
+        if (e.getActionCommand().equals("Search")) {
+            this.clearArea();
+            roll = this.t2.getText().toUpperCase().trim();
+            var8 = this.student.iterator();
+
+            while(var8.hasNext()) {
+                s = (Student)var8.next();
+                if (Objects.equals(s.getRoll_no(), roll)) {
+                    this.a.append("Details of the student are: ");
+                    this.a.append("\n");
+                    this.a.append("Name: " + s.getName() + "\n");
+                    this.a.append("Roll no: " + s.getRoll_no() + "\n");
+                    this.a.append("Class: " + s.getC() + "\n");
+                    this.a.append("Percentage: " + s.getPercentage() + "\n");
+                    this.clearField();
+                    return;
+                }
+            }
+
+            if (roll.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter roll no to search the details");
+                this.clearField();
+            }
+
+            if (!roll.isEmpty() && !Objects.equals(this.getRoll_no(), roll)) {
+                JOptionPane.showMessageDialog(this, "No record found");
+                this.clearField();
+            }
+        }
+
+        if (e.getActionCommand().equals("Display")) {
+            this.a.setText("");
+            Iterator var7 = this.student.iterator();
+
+            while(var7.hasNext()) {
+                Student s = (Student)var7.next();
+                this.a.append("Name: " + s.getName() + "\n");
+                this.a.append("Roll no: " + s.getRoll_no() + "\n");
+                this.a.append("Class: " + s.getC() + "\n");
+                this.a.append("Percentage: " + s.getPercentage() + "\n");
+                this.a.append("\n");
+            }
+        }
+
+    }
+
+    void clearField() {
+        this.t1.setText("");
+        this.t2.setText("");
+        this.t3.setText("");
+        this.t4.setText("");
+    }
+
+    void clearArea() {
+        this.a.setText("");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            (new Student()).setVisible(true);
+        });
+    }
+}
